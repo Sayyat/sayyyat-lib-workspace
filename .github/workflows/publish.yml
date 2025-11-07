@@ -3,7 +3,7 @@ name: NPM Publish
 on:
   push:
     tags:
-      # Бұл дұрыс: @scope/name@version форматын тыңдайды
+      # Triggers on any tag matching @scope/name@version.version.version
       - '@*/*@*.*.*'
 
 permissions:
@@ -18,8 +18,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup pnpm
+        # 'version' is removed to read it from package.json (packageManager)
         uses: pnpm/action-setup@v4
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,27 +29,29 @@ jobs:
           cache: 'pnpm'
 
       - name: Install Dependencies
+        # Must run install from the monorepo root
         run: pnpm install --frozen-lockfile
 
-      - name: Run Tests (Recommended)
+      - name: Run Tests
+        # Run tests for all packages recursively
         run: pnpm test -r
 
       - name: Parse Package Name from Tag
         id: parse_tag
         run: |
-          # Тегті аламыз (мысалы, '@sayyyat/react-query-conditional@0.0.1')
+          # Get the tag name (e.g., '@sayyyat/react-query-conditional@0.0.1')
           TAG_NAME="${{ github.ref_name }}"
-          
-          # 'v' әрпін алып тастаймыз. Бұл "соңғы @ белгісінен бастап бәрін өшір" дегенді білдіреді
+          # Strip the version part (e.g., '@0.0.1') to get the package name
           PKG_NAME=$(echo "$TAG_NAME" | sed 's/@[0-9].*//')
-          
           echo "PACKAGE_NAME=$PKG_NAME" >> "$GITHUB_OUTPUT"
           echo "Publishing: $PKG_NAME"
 
       - name: Build Package
+        # Filter by the package name derived from the tag
         run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" build
 
       - name: Publish Package
+        # Filter by the package name derived from the tag
         run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
