@@ -19,6 +19,10 @@
   ],
   "author": "Sayat Raykul",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@10.20.0",
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",
     "react": ">=18.0.0",
@@ -35,6 +39,5 @@
   },
   "files": [
     "dist"
-  ],
-  "packageManager": "pnpm@10.20.0"
+  ]
 }
