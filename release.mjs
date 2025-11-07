@@ -114,7 +114,12 @@ console.log(`New version: ${newVersion}, New tag: ${newTag}`);
 console.log("Committing version bump...");
 run("git", ["add", pkgJsonPath]);
 run("git", ["add", "pnpm-lock.yaml"]);
-run("git", ["commit", "-m", `chore(release): ${newTag}`]);
+
+// ⬇️ ⬇️ ⬇️ ОСЫ ЖОЛ ӨЗГЕРТІЛДІ ⬇️ ⬇️ ⬇️
+// -m флагы мен хабарламаны Windows shell-і бөлмейтіндей етіп,
+// тырнақшамен бірге бір аргументке біріктіреміз.
+run("git", ["commit", `-m"chore(release): ${newTag}"`]);
+// ⬆️ ⬆️ ⬆️ ОСЫ ЖОЛ ӨЗГЕРТІЛДІ ⬆️ ⬆️ ⬆️
 
 console.log(`Creating git tag ${newTag}...`);
 run("git", ["tag", newTag]);
