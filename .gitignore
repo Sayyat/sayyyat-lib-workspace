@@ -27,7 +27,7 @@ apps/*/node_modules/
 
 # Next.js (apps/web-next16)
 apps/*/.next/
-out/
+apps/*/out/
 
 # Кітапхана (packages/react-query-conditional)
 # tsup жинақтайтын 'dist' папкасы
