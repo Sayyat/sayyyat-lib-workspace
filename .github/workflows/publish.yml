@@ -3,8 +3,8 @@ name: NPM Publish
 on:
   push:
     tags:
-      # ❗️ Кез келген @scope/name@vX.Y.Z тегін тыңдайды
-      - '@*/*@v*.*.*'
+      # Бұл дұрыс: @scope/name@version форматын тыңдайды
+      - '@*/*@*.*.*'
 
 permissions:
   contents: read
@@ -35,23 +35,22 @@ jobs:
       - name: Run Tests (Recommended)
         run: pnpm test -r
 
-      # ⬇️ ⬇️ ⬇️ МІНЕ, БАСТЫ "СИҚЫР" ⬇️ ⬇️ ⬇️
       - name: Parse Package Name from Tag
         id: parse_tag
         run: |
-          # Тегті аламыз (мысалы, '@sayyyat/react-query-conditional@v1.0.0')
+          # Тегті аламыз (мысалы, '@sayyyat/react-query-conditional@0.0.1')
           TAG_NAME="${{ github.ref_name }}"
-          # Соңғы '@' белгісінен бастап бәрін кесіп тастаймыз (яғни, '@v1.0.0' бөлігін)
-          PKG_NAME=$(echo "$TAG_NAME" | sed 's/@v[0-9].*//')
+          
+          # 'v' әрпін алып тастаймыз. Бұл "соңғы @ белгісінен бастап бәрін өшір" дегенді білдіреді
+          PKG_NAME=$(echo "$TAG_NAME" | sed 's/@[0-9].*//')
+          
           echo "PACKAGE_NAME=$PKG_NAME" >> "$GITHUB_OUTPUT"
           echo "Publishing: $PKG_NAME"
 
       - name: Build Package
-        # ❗️ Пакеттің атын 'parse_tag' қадамынан аламыз
         run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" build
 
       - name: Publish Package
-        # ❗️ Пакеттің атын 'parse_tag' қадамынан аламыз
         run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
