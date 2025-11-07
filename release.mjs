@@ -1,4 +1,4 @@
-// release.mjs (Универсалды Monorepo нұсқасы)
+// release.mjs (Универсалды Monorepo нұсқасы v2 - pnpm version түзетілді)
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -80,6 +80,7 @@ if (!isClean) {
 
 // --- 4. 'gh auth' тексеру ---
 console.log("Checking GitHub CLI auth status...");
+// (Бұл бөлім өзгеріссіз)
 const hasGh = spawnSync("gh", ["--version"], { stdio: "ignore" }).status === 0;
 const ghToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
 if (!hasGh) {
@@ -91,10 +92,16 @@ if (spawnSync("gh", ["auth", "status"], { stdio: "ignore" }).status !== 0 && !gh
   process.exit(1);
 }
 
-// --- 5. Нұсқаны 'pnpm' арқылы жаңарту ---
+// --- 5. ❗️ Нұсқаны 'pnpm' арқылы жаңарту (ТҮЗЕТІЛДІ) ---
 console.log(`Bumping version for ${PKG_NAME} using ${versionType}...`);
-// ❗️ 'npm version' ЕМЕС, 'pnpm version' ҚОЛДАНАМЫЗ ❗️
-run("pnpm", ["version", versionType, "--filter", PKG_NAME]);
+// 'pnpm version' '--filter'-мен дұрыс жұмыс істемейді.
+// Оның орнына, 'cwd' (current working directory) опциясын қолданып,
+// команданы тікелей сол пакеттің ІШІНДЕ орындаймыз.
+run(
+    "pnpm",
+    ["version", versionType, "--git-tag-version=false"], // ❗️ 'git' командасын орындамауды сұраймыз
+    { cwd: PKG_PATH } // ❗️ Команданы орындау орны
+);
 
 // --- 6. Жаңа нұсқаны және тегті алу ---
 const pkgJsonPath = path.join(PKG_PATH, "package.json");
