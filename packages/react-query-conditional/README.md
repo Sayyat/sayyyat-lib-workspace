@@ -1,8 +1,9 @@
 # @sayyyat/react-query-conditional
 
-[](https://www.google.com/search?q=https://www.npmjs.com/package/%40sayyyat/react-query-conditional)
-[](https://www.google.com/search?q=https://github.com/Sayyat/sayyyat-lib-workspace/actions)
-[](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/@sayyyat/react-query-conditional.svg)](https://www.npmjs.com/package/@sayyyat/react-query-conditional)
+[![CI/CD Status](https://github.com/Sayyat/sayyyat-lib-workspace/actions/workflows/publish.yml/badge.svg)](https://github.com/Sayyat/sayyyat-lib-workspace/actions)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@sayyyat/react-query-conditional)](https://bundlephobia.com/package/@sayyyat/react-query-conditional)
+[![License: MIT](https://img.shields.io/npm/l/@sayyyat/react-query-conditional)](https://opensource.org/licenses/MIT)
 
 A simple, zero-dependency, declarative React component to gracefully handle `@tanstack/react-query` states (`isLoading`, `isError`, `isEmpty`) without repeating logic.
 
