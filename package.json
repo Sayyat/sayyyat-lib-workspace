@@ -1,0 +1,16 @@
+{
+  "name": "sayyyat-lib-workspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "release": "node ./release.mjs",
+    "dev:pkg": "pnpm --filter \"@sayyyat/react-query-conditional\" dev",
+    "dev:web": "pnpm --filter \"web-next16\" dev",
+    "test": "pnpm test -r"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0"
+}

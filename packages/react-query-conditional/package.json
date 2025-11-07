@@ -1,0 +1,40 @@
+{
+  "name": "@sayyyat/react-query-conditional",
+  "version": "1.0.0",
+  "description": "Declarative conditional component for TanStack Query states (isLoading, isError, isEmpty).",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.tsx --format cjs,esm --dts --external react",
+    "dev": "pnpm build --watch",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "keywords": [
+    "react",
+    "tanstack-query",
+    "react-query",
+    "conditional",
+    "loading"
+  ],
+  "author": "Sayat Raykul",
+  "license": "MIT",
+  "peerDependencies": {
+    "@tanstack/react-query": ">=5.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.51.11",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tsup": "^8.2.3",
+    "typescript": "^5.5.4"
+  },
+  "files": [
+    "dist"
+  ],
+  "packageManager": "pnpm@10.20.0"
+}

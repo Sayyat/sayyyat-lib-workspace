@@ -1,0 +1,50 @@
+name: NPM Publish
+
+on:
+  push:
+    tags:
+      # ❗️ Тегтің жаңа форматын тыңдау
+      - '@sayyyat/react-query-conditional@v*.*.*'
+      # (Болашақта басқа пакет қоссаңыз, осында тағы бір жол қосасыз)
+      # - '@sayyyat/smart-i18n-react@v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org' # Міндетті түрде
+          cache: 'pnpm'
+          
+      - name: Install Dependencies
+        # 'pnpm install' негізгі (root) папкадан орындалуы керек
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Tests (Optional but recommended)
+        # 'pnpm test -r' (recursive) барлық пакеттерде тест орындайды
+        run: pnpm test -r
+
+      # ❗️ pnpm --filter арқылы нақты пакетті ғана жинақтау (build)
+      - name: Build @sayyyat/react-query-conditional
+        run: pnpm --filter "@sayyyat/react-query-conditional" build
+
+      # ❗️ pnpm --filter арқылы нақты пакетті ғана жариялау (publish)
+      - name: Publish @sayyyat/react-query-conditional
+        run: pnpm --filter "@sayyyat/react-query-conditional" publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
