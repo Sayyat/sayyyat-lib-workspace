@@ -3,10 +3,8 @@ name: NPM Publish
 on:
   push:
     tags:
-      # ❗️ Тегтің жаңа форматын тыңдау
-      - '@sayyyat/react-query-conditional@v*.*.*'
-      # (Болашақта басқа пакет қоссаңыз, осында тағы бір жол қосасыз)
-      # - '@sayyyat/smart-i18n-react@v*.*.*'
+      # ❗️ Кез келген @scope/name@vX.Y.Z тегін тыңдайды
+      - '@*/*@v*.*.*'
 
 permissions:
   contents: read
@@ -14,37 +12,46 @@ permissions:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org' # Міндетті түрде
+          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
-          
+
       - name: Install Dependencies
-        # 'pnpm install' негізгі (root) папкадан орындалуы керек
         run: pnpm install --frozen-lockfile
 
-      - name: Run Tests (Optional but recommended)
-        # 'pnpm test -r' (recursive) барлық пакеттерде тест орындайды
+      - name: Run Tests (Recommended)
         run: pnpm test -r
 
-      # ❗️ pnpm --filter арқылы нақты пакетті ғана жинақтау (build)
-      - name: Build @sayyyat/react-query-conditional
-        run: pnpm --filter "@sayyyat/react-query-conditional" build
+      # ⬇️ ⬇️ ⬇️ МІНЕ, БАСТЫ "СИҚЫР" ⬇️ ⬇️ ⬇️
+      - name: Parse Package Name from Tag
+        id: parse_tag
+        run: |
+          # Тегті аламыз (мысалы, '@sayyyat/react-query-conditional@v1.0.0')
+          TAG_NAME="${{ github.ref_name }}"
+          # Соңғы '@' белгісінен бастап бәрін кесіп тастаймыз (яғни, '@v1.0.0' бөлігін)
+          PKG_NAME=$(echo "$TAG_NAME" | sed 's/@v[0-9].*//')
+          echo "PACKAGE_NAME=$PKG_NAME" >> "$GITHUB_OUTPUT"
+          echo "Publishing: $PKG_NAME"
 
-      # ❗️ pnpm --filter арқылы нақты пакетті ғана жариялау (publish)
-      - name: Publish @sayyyat/react-query-conditional
-        run: pnpm --filter "@sayyyat/react-query-conditional" publish --no-git-checks
+      - name: Build Package
+        # ❗️ Пакеттің атын 'parse_tag' қадамынан аламыз
+        run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" build
+
+      - name: Publish Package
+        # ❗️ Пакеттің атын 'parse_tag' қадамынан аламыз
+        run: pnpm --filter "${{ steps.parse_tag.outputs.PACKAGE_NAME }}" publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
