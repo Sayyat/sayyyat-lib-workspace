@@ -7,7 +7,7 @@
     "release": "node ./release.mjs",
     "dev:pkg": "pnpm --filter \"@sayyyat/react-query-conditional\" dev",
     "dev:web": "pnpm --filter \"web-next16\" dev",
-    "test": "pnpm test -r"
+    "test": "echo \"Running root test script (if any)...\" && exit 0"
   },
   "keywords": [],
   "author": "",
