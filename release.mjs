@@ -49,21 +49,20 @@ for (let i = 4; i < process.argv.length; i++) {
 // --- 2. Пакетті pnpm арқылы табу ---
 let pkgData;
 try {
-  // 'pnpm list' арқылы пакеттің толық атын және орналасқан жерін табамыз
   const listOutput = out("pnpm", ["list", "--filter", targetPackageShortName, "--depth=-1", "--json"]);
   const list = JSON.parse(listOutput);
   if (!list || list.length === 0) {
     throw new Error(`Package not found with filter: ${targetPackageShortName}`);
   }
-  pkgData = list[0]; // Табылған бірінші пакетті аламыз
+  pkgData = list[0];
 } catch (e) {
   console.error(`❌ "${targetPackageShortName}" пакетін табу кезінде қате орын алды.`);
   console.error(e.message);
   process.exit(1);
 }
 
-const PKG_NAME = pkgData.name; // Мысалы: "@sayyyat/react-query-conditional"
-const PKG_PATH = pkgData.path; // Мысалы: "D:\...\packages\react-query-conditional"
+const PKG_NAME = pkgData.name; // @sayyyat/react-query-conditional
+const PKG_PATH = pkgData.path; // D:\...\packages\react-query-conditional
 
 console.log(`🚀 Релиз жасалатын пакет: ${PKG_NAME} (v${pkgData.version})`);
 console.log(`   Орналасқан жері: ${PKG_PATH}`);
@@ -94,6 +93,7 @@ if (spawnSync("gh", ["auth", "status"], { stdio: "ignore" }).status !== 0 && !gh
 
 // --- 5. Нұсқаны 'pnpm' арқылы жаңарту ---
 console.log(`Bumping version for ${PKG_NAME} using ${versionType}...`);
+// ❗️ 'npm version' ЕМЕС, 'pnpm version' ҚОЛДАНАМЫЗ ❗️
 run("pnpm", ["version", versionType, "--filter", PKG_NAME]);
 
 // --- 6. Жаңа нұсқаны және тегті алу ---
@@ -106,7 +106,7 @@ console.log(`New version: ${newVersion}, New tag: ${newTag}`);
 // --- 7. 'git commit' және 'tag' жасау ---
 console.log("Committing version bump...");
 run("git", ["add", pkgJsonPath]);
-run("git", ["add", "pnpm-lock.yaml"]); // Lockfile әрқашан негізгі (root) папкада жаңартылады
+run("git", ["add", "pnpm-lock.yaml"]);
 run("git", ["commit", "-m", `chore(release): ${newTag}`]);
 
 console.log(`Creating git tag ${newTag}...`);
@@ -127,4 +127,4 @@ run("gh", ghArgs, {
   env: { ...process.env, GH_TOKEN: ghToken ?? process.env.GITHUB_TOKEN },
 });
 
-console.log(`✅ Release ${newTag} created. CI/CD will now take over.`);
+console.log(`✅ Release ${newTag} создан. CI/CD will now take over.`);
