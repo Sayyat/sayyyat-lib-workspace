@@ -1,6 +1,6 @@
 {
   "name": "@sayyyat/react-query-conditional",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Declarative conditional component for TanStack Query states (isLoading, isError, isEmpty).",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
