@@ -5,7 +5,7 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/@sayyyat/react-query-conditional)](https://bundlephobia.com/package/@sayyyat/react-query-conditional)
 [![License: MIT](https://img.shields.io/npm/l/@sayyyat/react-query-conditional)](https://opensource.org/licenses/MIT)
 
-A simple, zero-dependency, declarative React component to gracefully handle `@tanstack/react-query` states (`isLoading`, `isError`, `isEmpty`) without repeating logic.
+A simple, zero-dependency, declarative React component to gracefully handle `@tanstack/react-query` states (`isPending`, `isError`, `isEmpty`) without repeating logic.
 
 -----
 
@@ -55,7 +55,7 @@ function MyComponent() {
 }
 ```
 
-The component automatically handles `isLoading`, `isError`, and `isEmpty` states, rendering its `children` (as a function) only for the "happy path".
+The component automatically handles `isPending`, `isError`, and `isEmpty` states, rendering its `children` (as a function) only for the "happy path".
 
 ## Features
 
